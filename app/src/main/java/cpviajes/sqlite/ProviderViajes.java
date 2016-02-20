@@ -84,7 +84,7 @@ public class ProviderViajes extends ContentProvider {
         uriMatcher.addURI(AUTORIDAD, "tipo_v/*", TIPO_V_ID);
     }
     // [/URI_MATCHER]
-
+/*
     // [CAMPOS_AUXILIARES]
     private static final String CABECERA_PEDIDO_JOIN_CLIENTE_Y_FORMA_PAGO = "cabecera_pedido " +
             "INNER JOIN cliente " +
@@ -109,7 +109,7 @@ public class ProviderViajes extends ContentProvider {
             Productos.NOMBRE
     };
     // [/CAMPOS_AUXILIARES]
-
+*/
     @Override
     public boolean onCreate() {
         helper = new BaseDatosViajes(getContext());
@@ -211,20 +211,24 @@ public class ProviderViajes extends ContentProvider {
                 return ContratoViajes.generarMimeItem("viajes");
             case VIAJES_DET:
                 return ContratoViajes.generarMime("viajes");
-            case DETALLES_PEDIDOS_ID:
-                return ContratoPedidos.generarMimeItem("detalles_pedidos");
-            case PRODUCTOS:
-                return ContratoPedidos.generarMime("productos");
-            case PRODUCTOS_ID:
-                return ContratoPedidos.generarMimeItem("productos");
-            case CLIENTES:
-                return ContratoPedidos.generarMime("clientes");
-            case CLIENTES_ID:
-                return ContratoPedidos.generarMimeItem("clientes");
-            case FORMAS_PAGO:
-                return ContratoPedidos.generarMime("formas_pago");
-            case FORMAS_PAGO_ID:
-                return ContratoPedidos.generarMimeItem("formas_pago");
+            case DETALLES_EVENTOS_ID:
+                return ContratoPedidos.generarMimeItem("eventos");
+            case CATEGORIAS:
+                return ContratoPedidos.generarMime("categorias");
+            case CATEGORIAS_ID:
+                return ContratoPedidos.generarMimeItem("categorias");
+            case MONEDAS:
+                return ContratoPedidos.generarMime("monedas");
+            case MONEDAS_ID:
+                return ContratoPedidos.generarMimeItem("monedas");
+            case M_PAGO:
+                return ContratoPedidos.generarMime("mpago");
+            case M_PAGO_ID:
+                return ContratoPedidos.generarMimeItem("mpago");
+	    case TIPOV:
+                return ContratoPedidos.generarMime("tipov");
+            case TIPOV_ID:
+                return ContratoPedidos.generarMimeItem("tipov");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -239,43 +243,48 @@ public class ProviderViajes extends ContentProvider {
         String id = null;
 
         switch (uriMatcher.match(uri)) {
-            case CABECERAS_PEDIDOS:
+            case EVENTOS:
                 // Generar Pk
-                if (null == values.getAsString(CabecerasPedido.ID)) {
-                    id = CabecerasPedido.generarIdCabeceraPedido();
-                    values.put(CabecerasPedido.ID, id);
+                if (null == values.getAsString(Eventos.ID)) {
+                    id = Eventos.generarIdEventos();
+                    values.put(Eventos.ID, id);
                 }
 
-                bd.insertOrThrow(Tablas.CABECERA_PEDIDO, null, values);
+                bd.insertOrThrow(Tablas.EVENTOS, null, values);
                 notificarCambio(uri);
-                return CabecerasPedido.crearUriCabeceraPedido(id);
+                return Eventos.crearUriEventos(id);
 
-            case CABECERAS_ID_DETALLES:
+            case VIAJES_ID_DETALLES:
                 // Setear id_cabecera_pedido
-                id = CabecerasPedido.obtenerIdCabeceraPedido(uri);
+                id = Viajes.obtenerIdViaje(uri);
 
-                values.put(DetallesPedido.ID_CABECERA_PEDIDO, id);
-                bd.insertOrThrow(Tablas.DETALLE_PEDIDO, null, values);
+                values.put(Viajes.ID_VIAJES, id);
+                bd.insertOrThrow(Tablas.VIAJES, null, values);
                 notificarCambio(uri);
 
-                String secuencia = values.getAsString(DetallesPedido.SECUENCIA);
+                String nomviaje = values.getAsString(Viajes.NOMBRE);
 
-                return DetallesPedido.crearUriDetallePedido(id, secuencia);
+                return Viajes.crearUriViajes(id, nombre);
 
-            case PRODUCTOS:
-                bd.insertOrThrow(Tablas.PRODUCTO, null, values);
+            case CATEGORIAS:
+                bd.insertOrThrow(Tablas.CATEGORIAS, null, values);
                 notificarCambio(uri);
-                return Productos.crearUriProducto(values.getAsString(Tablas.PRODUCTO));
+                return Productos.crearUriProducto(values.getAsString(Tablas.CATEGORIAS));
 
-            case CLIENTES:
-                bd.insertOrThrow(Tablas.CLIENTE, null, values);
+            case MONEDAS:
+                bd.insertOrThrow(Tablas.MONEDAS, null, values);
                 notificarCambio(uri);
                 return Clientes.crearUriCliente(values.getAsString(Clientes.ID));
 
-            case FORMAS_PAGO:
+            case MPAGO:
                 bd.insertOrThrow(Tablas.FORMA_PAGO, null, values);
                 notificarCambio(uri);
-                return FormasPago.crearUriFormaPago(values.getAsString(FormasPago.ID));
+                return FormasPago.crearUriFormaPago(values.getAsString(mPago.ID));
+
+	    case TIPOV:
+                bd.insertOrThrow(Tablas.TIPOV, null, values);
+                notificarCambio(uri);
+                return FormasPago.crearUriTipoV(values.getAsString(TipoV.ID));
 
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
@@ -300,7 +309,7 @@ public class ProviderViajes extends ContentProvider {
         Cursor c;
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-
+/*
         switch (match) {
             case CABECERAS_PEDIDOS:
                 // Obtener filtro
@@ -380,7 +389,7 @@ public class ProviderViajes extends ContentProvider {
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
-
+*/
         c.setNotificationUri(resolver, uri);
 
         return c;
@@ -388,14 +397,15 @@ public class ProviderViajes extends ContentProvider {
     }
 
     private String construirFiltro(String filtro) {
-        String sentencia = null;
+      //  String sentencia = null;
+	String nombre = null;
 
         switch (filtro) {
-            case CabecerasPedido.FILTRO_CLIENTE:
-                sentencia = "cliente.nombres";
+            case Viajes.FILTRO_CLIENTE:
+                sentencia = "MONEDAS.nombres";
                 break;
-            case CabecerasPedido.FILTRO_FECHA:
-                sentencia = "cabecera_pedido.fecha";
+            case Viajes.FILTRO_FECHA:
+                sentencia = "Viajes.fecha";
                 break;
         }
 
@@ -415,9 +425,9 @@ public class ProviderViajes extends ContentProvider {
 
         switch (uriMatcher.match(uri)) {
             case CABECERAS_PEDIDOS_ID:
-                id = CabecerasPedido.obtenerIdCabeceraPedido(uri);
+                id = Viajes.obtenerIdCabeceraPedido(uri);
                 afectados = bd.update(Tablas.CABECERA_PEDIDO, values,
-                        CabecerasPedido.ID + " = ?", new String[]{id});
+                        Viajes.ID + " = ?", new String[]{id});
                 notificarCambio(uri);
                 break;
 
