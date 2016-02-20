@@ -144,46 +144,46 @@ public class ProviderViajes extends ContentProvider {
         int afectados;
 
         switch (uriMatcher.match(uri)) {
-            case CABECERAS_PEDIDOS_ID:
+            case EVENTOS_ID:
                 // Obtener id
-                id = CabecerasPedido.obtenerIdCabeceraPedido(uri);
+                id = Eventos.obtenerIdEvento(uri);
                 afectados = bd.delete(
-                        Tablas.CABECERA_PEDIDO,
-                        CabecerasPedido.ID + " = ? ",
+                        Tablas.EVENTOS,
+                        Eventos.ID + " = ? ",
                         new String[]{id}
                 );
                 notificarCambio(uri);
                 break;
 
-            case DETALLES_PEDIDOS_ID:
-                String[] claves = DetallesPedido.obtenerIdDetalle(uri);
+            case VIAJES_ID:
+                String[] claves = Viaje.obtenerIdViaje(uri);
 
                 String seleccion = String.format("%s=? AND %s=?",
-                        DetallesPedido.ID_CABECERA_PEDIDO, DetallesPedido.SECUENCIA);
+                        Viaje.ID_EVENTO, Viaje.NOMBRE);
 
-                afectados = bd.delete(Tablas.DETALLE_PEDIDO, seleccion, claves);
+                afectados = bd.delete(Tablas.VIAJES, seleccion, claves);
                 break;
 
-            case PRODUCTOS_ID:
+            case CATEGORIAS_ID:
                 id = Productos.obtenerIdProducto(uri);
-                afectados = bd.delete(Tablas.PRODUCTO,
-                        Productos.ID + "=" + "\"" + id + "\""
+                afectados = bd.delete(Tablas.CATEGORIAS,
+                        Categorias.ID + "=" + "\"" + id + "\""
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs);
                 break;
 
-            case CLIENTES_ID:
-                id = Clientes.obtenerIdCliente(uri);
-                afectados = bd.delete(Tablas.CLIENTE,
+            case MONEDAS_ID:
+                id = Monedas.obtenerIdMonedas(uri);
+                afectados = bd.delete(Tablas.MONEDAS,
                         getWhere(selection, id),
                         selectionArgs);
                 break;
 
-            case FORMAS_PAGO_ID:
-                id = FormasPago.obtenerIdFormaPago(uri);
-                afectados = bd.delete(Tablas.FORMA_PAGO,
-                        FormasPago.ID + "=" + "\"" + id + "\""
+            case MPAGO_ID:
+                id = MPago.obtenerIdMPago(uri);
+                afectados = bd.delete(Tablas.M_PAGO,
+                        MPago.ID + "=" + "\"" + id + "\""
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs);
@@ -197,7 +197,7 @@ public class ProviderViajes extends ContentProvider {
 
     @NonNull
     private String getWhere(String selection, String id) {
-        return Productos.ID + "=" + "\"" + id + "\""
+        return Categorias.ID + "=" + "\"" + id + "\""
                 + (!TextUtils.isEmpty(selection) ?
                 " AND (" + selection + ')' : "");
     }
@@ -212,23 +212,23 @@ public class ProviderViajes extends ContentProvider {
             case VIAJES_DET:
                 return ContratoViajes.generarMime("viajes");
             case DETALLES_EVENTOS_ID:
-                return ContratoPedidos.generarMimeItem("eventos");
+                return ContratoEventos.generarMimeItem("eventos");
             case CATEGORIAS:
-                return ContratoPedidos.generarMime("categorias");
+                return ContratoCategorias.generarMime("categorias");
             case CATEGORIAS_ID:
-                return ContratoPedidos.generarMimeItem("categorias");
+                return ContratoCategorias.generarMimeItem("categorias");
             case MONEDAS:
-                return ContratoPedidos.generarMime("monedas");
+                return ContratoMonedas.generarMime("monedas");
             case MONEDAS_ID:
-                return ContratoPedidos.generarMimeItem("monedas");
+                return ContratoMonedas.generarMimeItem("monedas");
             case M_PAGO:
-                return ContratoPedidos.generarMime("mpago");
+                return ContratoMpago.generarMime("mpago");
             case M_PAGO_ID:
-                return ContratoPedidos.generarMimeItem("mpago");
+                return ContratoMpago.generarMimeItem("mpago");
 	    case TIPOV:
-                return ContratoPedidos.generarMime("tipov");
+                return ContratoTipov.generarMime("tipov");
             case TIPOV_ID:
-                return ContratoPedidos.generarMimeItem("tipov");
+                return ContratoTipov.generarMimeItem("tipov");
             default:
                 throw new UnsupportedOperationException("Uri desconocida =>" + uri);
         }
@@ -269,22 +269,22 @@ public class ProviderViajes extends ContentProvider {
             case CATEGORIAS:
                 bd.insertOrThrow(Tablas.CATEGORIAS, null, values);
                 notificarCambio(uri);
-                return Productos.crearUriProducto(values.getAsString(Tablas.CATEGORIAS));
+                return Categorias.crearUriCategorias(values.getAsString(Tablas.CATEGORIAS));
 
             case MONEDAS:
                 bd.insertOrThrow(Tablas.MONEDAS, null, values);
                 notificarCambio(uri);
-                return Clientes.crearUriCliente(values.getAsString(Clientes.ID));
+                return Monedas.crearUriMonedas(values.getAsString(Monedas.ID));
 
             case MPAGO:
-                bd.insertOrThrow(Tablas.FORMA_PAGO, null, values);
+                bd.insertOrThrow(Tablas.MPAGO, null, values);
                 notificarCambio(uri);
-                return FormasPago.crearUriFormaPago(values.getAsString(mPago.ID));
+                return MPago.crearUriMPago(values.getAsString(mPago.ID));
 
 	    case TIPOV:
                 bd.insertOrThrow(Tablas.TIPOV, null, values);
                 notificarCambio(uri);
-                return FormasPago.crearUriTipoV(values.getAsString(TipoV.ID));
+                return Tipov.crearUriTipoV(values.getAsString(TipoV.ID));
 
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
@@ -309,87 +309,87 @@ public class ProviderViajes extends ContentProvider {
         Cursor c;
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-/*
+
         switch (match) {
-            case CABECERAS_PEDIDOS:
+            case EVENTOS:
                 // Obtener filtro
-                String filtro = CabecerasPedido.tieneFiltro(uri)
+                String filtro = Eventos.tieneFiltro(uri)
                         ? construirFiltro(uri.getQueryParameter("filtro")) : null;
 
                 // Consultando todas las cabeceras de pedido
-                builder.setTables(CABECERA_PEDIDO_JOIN_CLIENTE_Y_FORMA_PAGO);
-                c = builder.query(bd, proyCabeceraPedido,
+                builder.setTables(EVENTOS_JOIN_MONEDAS_Y_M_PAGO);
+                c = builder.query(bd, proyEvento,
                         null, null, null, null, filtro);
                 break;
-            case CABECERAS_PEDIDOS_ID:
+            case EVENTOS_ID:
                 // Consultando una cabecera de pedido
-                id = CabecerasPedido.obtenerIdCabeceraPedido(uri);
-                builder.setTables(CABECERA_PEDIDO_JOIN_CLIENTE_Y_FORMA_PAGO);
-                c = builder.query(bd, proyCabeceraPedido,
-                        CabecerasPedido.ID + "=" + "\'" + id + "\'"
+                id = Eventos.obtenerIdEvento(uri);
+                builder.setTables(EVENTOS_JOIN_MONEDAS_Y_M_PAGO);
+                c = builder.query(bd, proyEvento,
+                        Evento.ID + "=" + "\'" + id + "\'"
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, null);
                 break;
-            case CABECERAS_ID_DETALLES:
-                id = CabecerasPedido.obtenerIdCabeceraPedido(uri);
-                builder.setTables(DETALLE_PEDIDO_JOIN_PRODUCTO);
+            case EVENTOS_ID_DETALLES:
+                id = Eventos.obtenerIdEvento(uri);
+                builder.setTables(DETALLE_EVENTO_JOIN_CATEGORIA);
                 c = builder.query(bd, proyDetalle,
-                        DetallesPedido.ID_CABECERA_PEDIDO + "=" + "\'" + id + "\'"
+                        DetallesEvento.ID_EVENTOS + "=" + "\'" + id + "\'"
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs, null, null, sortOrder);
                 break;
 
-            case DETALLES_PEDIDOS:
-                builder.setTables(DETALLE_PEDIDO_JOIN_PRODUCTO);
-                c = builder.query(bd, proyDetalle,
+            case DETALLES_VIAJES:
+                builder.setTables(DETALLE_VIAJE_JOIN_CATEGORIA);
+                c = builder.query(bd, proyViaje,
                         selection, selectionArgs, null, null, sortOrder);
                 break;
 
-            case PRODUCTOS:
-                c = bd.query(Tablas.PRODUCTO, projection,
+            case CATEGORIAS:
+                c = bd.query(Tablas.CATEGORIAS, projection,
                         selection, selectionArgs,
                         null, null, sortOrder);
                 break;
-            case PRODUCTOS_ID:
-                id = Productos.obtenerIdProducto(uri);
-                c = bd.query(Tablas.PRODUCTO, projection,
-                        Productos.ID + "=" + "\'" + id + "\'"
+            case CATEGORIAS_ID:
+                id = Categorias.obtenerIdCategoria(uri);
+                c = bd.query(Tablas.CATEGORIAS, projection,
+                        Categorias.ID + "=" + "\'" + id + "\'"
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs,
                         null, null, sortOrder);
                 break;
 
-            case CLIENTES:
-                c = bd.query(Tablas.CLIENTE, projection,
+            case MONEDAS:
+                c = bd.query(Tablas.MONEDAS, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 break;
 
-            case CLIENTES_ID:
-                id = Clientes.obtenerIdCliente(uri);
-                c = bd.query(Tablas.CLIENTE, projection,
-                        Clientes.ID + " = ?",
+            case MONEDAS_ID:
+                id = Monedas.obtenerIdMoneda(uri);
+                c = bd.query(Tablas.MONEDa, projection,
+                        Monedas.ID + " = ?",
                         new String[]{id}, null, null, null);
                 break;
 
-            case FORMAS_PAGO:
-                c = bd.query(Tablas.FORMA_PAGO, projection,
+            case M_PAGO:
+                c = bd.query(Tablas.M_PAGO, projection,
                         selection, selectionArgs, null, null, sortOrder);
                 break;
 
-            case FORMAS_PAGO_ID:
-                id = FormasPago.obtenerIdFormaPago(uri);
-                c = bd.query(Tablas.FORMA_PAGO, projection,
-                        FormasPago.ID + " = ?",
+            case M_PAGO_ID:
+                id = MPago.obtenerIdMPago(uri);
+                c = bd.query(Tablas.M_PAGO, projection,
+                        MPago.ID + " = ?",
                         new String[]{id}, null, null, null);
                 break;
 
             default:
                 throw new UnsupportedOperationException(URI_NO_SOPORTADA);
         }
-*/
+
         c.setNotificationUri(resolver, uri);
 
         return c;
@@ -424,44 +424,53 @@ public class ProviderViajes extends ContentProvider {
         int afectados;
 
         switch (uriMatcher.match(uri)) {
-            case CABECERAS_PEDIDOS_ID:
-                id = Viajes.obtenerIdCabeceraPedido(uri);
-                afectados = bd.update(Tablas.CABECERA_PEDIDO, values,
+            case EVENTOS_ID:
+                id = Viajes.obtenerIdEvento(uri);
+                afectados = bd.update(Tablas.EVENTOS, values,
                         Viajes.ID + " = ?", new String[]{id});
                 notificarCambio(uri);
                 break;
 
-            case DETALLES_PEDIDOS_ID:
-                String[] claves = DetallesPedido.obtenerIdDetalle(uri);
+            case DETALLES_EVENTOS_ID:
+                String[] claves = DetallesEvento.obtenerIdEvento(uri);
 
                 String seleccion = String.format("%s=? AND %s=?",
-                        DetallesPedido.ID_CABECERA_PEDIDO, DetallesPedido.SECUENCIA);
+                        DetallesEvento.ID_EVENTOS, DetallesEvento.SECUENCIA);
 
-                afectados = bd.update(Tablas.DETALLE_PEDIDO, values, seleccion, claves);
+                afectados = bd.update(Tablas.DETALLE_EVENTO, values, seleccion, claves);
                 break;
 
-            case PRODUCTOS_ID:
-                id = Productos.obtenerIdProducto(uri);
-                afectados = bd.update(Tablas.PRODUCTO, values,
+            case CATEGORIAS_ID:
+                id = categorias.obtenerIdcategoria(uri);
+                afectados = bd.update(Tablas.CATEGORIAS, values,
                         Productos.ID + "=" + "\"" + id + "\""
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs);
                 break;
 
-            case CLIENTES_ID:
-                id = Clientes.obtenerIdCliente(uri);
-                afectados = bd.update(Tablas.CLIENTE, values,
-                        Clientes.ID + "=" + "\"" + id + "\""
+            case MONEDAS_ID:
+                id = Monedas.obtenerIdMoneda(uri);
+                afectados = bd.update(Tablas.MONEDAS, values,
+                        Monedas.ID + "=" + "\"" + id + "\""
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs);
                 break;
 
-            case FORMAS_PAGO_ID:
-                id = FormasPago.obtenerIdFormaPago(uri);
-                afectados = bd.update(Tablas.FORMA_PAGO, values,
-                        FormasPago.ID + "=" + "\"" + id + "\""
+            case M_PAGO_ID:
+                id = MPago.obtenerIdMPago(uri);
+                afectados = bd.update(Tablas.M_PAGO, values,
+                        MPago.ID + "=" + "\"" + id + "\""
+                                + (!TextUtils.isEmpty(selection) ?
+                                " AND (" + selection + ')' : ""),
+                        selectionArgs);
+                break;
+
+	    case TIPOV_ID:
+                id = Tipov.obtenerIdTipov(uri);
+                afectados = bd.update(Tablas.TIPOV, values,
+                        Tipov.ID + "=" + "\"" + id + "\""
                                 + (!TextUtils.isEmpty(selection) ?
                                 " AND (" + selection + ')' : ""),
                         selectionArgs);
