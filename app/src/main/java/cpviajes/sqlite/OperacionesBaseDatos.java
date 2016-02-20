@@ -14,10 +14,10 @@ import com.herprogramacion.CPViajes.sqlite.ContratoPedidos.DetallesPedido;
 import com.herprogramacion.CPViajes.sqlite.ContratoPedidos.FormasPago;
 import com.herprogramacion.CPViajes.sqlite.ContratoPedidos.Productos;
 
-import cpviajes.modelo.Cliente;
-import cpviajes.modelo.DetallePedido;
-import cpviajes.modelo.FormaPago;
-import cpviajes.modelo.Producto;
+import cpviajes.modelo.Monedas;
+import cpviajes.modelo.Viajes;
+import cpviajes.modelo.MPago;
+import cpviajes.modelo.Categorias;
 
 @Deprecated
 /**
@@ -140,7 +140,7 @@ public final class OperacionesBaseDatos {
 
     }
 
-    public String insertarDetallePedido(DetallePedido detalle) {
+    public String insertarDetallePedido(Viajes detalle) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
@@ -156,7 +156,7 @@ public final class OperacionesBaseDatos {
 
     }
 
-    public boolean actualizarDetallePedido(DetallePedido detalle) {
+    public boolean actualizarDetallePedido(Viajes detalle) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
@@ -195,7 +195,7 @@ public final class OperacionesBaseDatos {
         return db.rawQuery(sql, null);
     }
 
-    public String insertarProducto(Producto producto) {
+    public String insertarProducto(Categorias producto) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
@@ -212,7 +212,7 @@ public final class OperacionesBaseDatos {
 
     }
 
-    public boolean actualizarProducto(Producto producto) {
+    public boolean actualizarProducto(Categorias producto) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
@@ -249,7 +249,7 @@ public final class OperacionesBaseDatos {
         return db.rawQuery(sql, null);
     }
 
-    public String insertarCliente(Cliente cliente) {
+    public String insertarCliente(Monedas monedas) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         // Generar Pk
@@ -257,23 +257,23 @@ public final class OperacionesBaseDatos {
 
         ContentValues valores = new ContentValues();
         valores.put(Clientes.ID, idCliente);
-        valores.put(Clientes.NOMBRES, cliente.nombres);
-        valores.put(Clientes.APELLIDOS, cliente.apellidos);
-        valores.put(Clientes.TELEFONO, cliente.telefono);
+        valores.put(Clientes.NOMBRES, monedas.nombres);
+        valores.put(Clientes.APELLIDOS, monedas.apellidos);
+        valores.put(Clientes.TELEFONO, monedas.telefono);
 
         return db.insertOrThrow(Tablas.CLIENTE, null, valores) > 0 ? idCliente : null;
     }
 
-    public boolean actualizarCliente(Cliente cliente) {
+    public boolean actualizarCliente(Monedas monedas) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
-        valores.put(Clientes.NOMBRES, cliente.nombres);
-        valores.put(Clientes.APELLIDOS, cliente.apellidos);
-        valores.put(Clientes.TELEFONO, cliente.telefono);
+        valores.put(Clientes.NOMBRES, monedas.nombres);
+        valores.put(Clientes.APELLIDOS, monedas.apellidos);
+        valores.put(Clientes.TELEFONO, monedas.telefono);
 
         String whereClause = String.format("%s=?", Clientes.ID);
-        final String[] whereArgs = {cliente.idCliente};
+        final String[] whereArgs = {monedas.idCliente};
 
         int resultado = db.update(Tablas.CLIENTE, valores, whereClause, whereArgs);
 
@@ -301,7 +301,7 @@ public final class OperacionesBaseDatos {
         return db.rawQuery(sql, null);
     }
 
-    public String insertarFormaPago(FormaPago formaPago) {
+    public String insertarFormaPago(MPago mPago) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         // Generar Pk
@@ -309,19 +309,19 @@ public final class OperacionesBaseDatos {
 
         ContentValues valores = new ContentValues();
         valores.put(FormasPago.ID, idFormaPago);
-        valores.put(FormasPago.NOMBRE, formaPago.nombre);
+        valores.put(FormasPago.NOMBRE, mPago.nombre);
 
         return db.insertOrThrow(Tablas.FORMA_PAGO, null, valores) > 0 ? idFormaPago : null;
     }
 
-    public boolean actualizarFormaPago(FormaPago formaPago) {
+    public boolean actualizarFormaPago(MPago mPago) {
         SQLiteDatabase db = baseDatos.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
-        valores.put(FormasPago.NOMBRE, formaPago.nombre);
+        valores.put(FormasPago.NOMBRE, mPago.nombre);
 
         String whereClause = String.format("%s=?", FormasPago.ID);
-        String[] whereArgs = {formaPago.idFormaPago};
+        String[] whereArgs = {mPago.idFormaPago};
 
         int resultado = db.update(Tablas.FORMA_PAGO, valores, whereClause, whereArgs);
 

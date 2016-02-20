@@ -6,11 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.util.Log;
 
-import com.herprogramacion.CPViajes.sqlite.ContratoViajes.Categorias;
-import com.herprogramacion.CPViajes.sqlite.ContratoViajes.MPago;
-import com.herprogramacion.CPViajes.sqlite.ContratoViajes.Monedas;
-import com.herprogramacion.CPViajes.sqlite.ContratoViajes.TipoV;
-import com.herprogramacion.CPViajes.sqlite.ContratoViajes.Viajes;
+import cpviajes.sqlite.ContratoViajes.Categorias;
+import cpviajes.sqlite.ContratoViajes.MPago;
+import cpviajes.sqlite.ContratoViajes.Monedas;
+import cpviajes.sqlite.ContratoViajes.TipoV;
+import cpviajes.sqlite.ContratoViajes.Viajes;
+import cpviajes.sqlite.ContratoViajes.Eventos;
 
 /**
  * Clase que administra la conexión de la base de datos y su estructuración
@@ -34,8 +35,9 @@ public class BaseDatosViajes extends SQLiteOpenHelper {
 
     interface Referencias {
 
-      //  String ID_EVENTOS = String.format("REFERENCES %s(%s) ON DELETE CASCADE",
-        //        Tablas.EVENTOS, Eventos.E_ID);
+       String ID_EVENTOS = String.format("REFERENCES %s(%s) ON DELETE CASCADE",
+       //String ID_EVENTOS = String.format("REFERENCES %s(%s)",
+                Tablas.EVENTOS, Eventos.E_ID);
 
         String ID_CATEGORIAS = String.format("REFERENCES %s(%s)",
                 Tablas.CATEGORIAS, Categorias.CAT_ID);

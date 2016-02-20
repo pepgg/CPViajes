@@ -71,7 +71,7 @@ public class ContratoViajes {
     }
 
     // [URIS]
-    public static final String AUTORIDAD = "com.pep.gg.viajes";
+    public static final String AUTORIDAD = "cpviajes";
 
     public static final Uri URI_BASE = Uri.parse("content://" + AUTORIDAD);
 
@@ -117,19 +117,21 @@ public class ContratoViajes {
                 URI_BASE.buildUpon().appendPath(RUTA_EVENTOS).build();
 
         public static final String PARAMETRO_FILTRO = "filtro";
-        public static final String FILTRO_CLIENTE = "cliente";
+        public static final String FILTRO_VIAJE = "viaje";
         public static final String FILTRO_TOTAL_G = "totalg";
         public static final String FILTRO_FECHA = "fecha";
 
-        public static String obtenerIdEvento(Uri uri) {
-            return uri.getPathSegments().get(1);
-        }
+         public static String obtenerIdEvento(Uri uri) {
+            return uri.getPathSegments().get(1);         } // lo cambio por el siguiente:
+        //public static String obtenerIdEvento(Uri uri) {
+        //    return uri.getLastPathSegment();
+        //}
 
-        public static Uri crearUriEventos(String id) {
+        public static Uri crearUriEvento(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
 
-        public static Uri crearUriViajes(String id) {
+        public static Uri crearUriParaViajes(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).appendPath("viajes").build();
         }
 
@@ -137,27 +139,29 @@ public class ContratoViajes {
             return uri != null && uri.getQueryParameter(PARAMETRO_FILTRO) != null;
         }
 
-        public static String generarIdEventos() {
+        public static String generarIdEvento() {
             return "EV-" + UUID.randomUUID().toString();
         }
     }
+
 
     public static class Viajes implements ColumnasViajes {
         public static final Uri URI_CONTENIDO =
                 URI_BASE.buildUpon().appendPath(RUTA_VIAJES).build();
 
-        public static Uri crearUriViajes(String id, String secuencia) {
-            // Uri de la forma 'viajes/:id#:secuencia'
-            return URI_CONTENIDO.buildUpon()
-                    .appendPath(String.format("%s#%s", id, secuencia))
-                    .build();
+        public static Uri crearUriViajes(String id) {
+            return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
-
         public static String[] obtenerIdViaje(Uri uri) {
             return uri.getLastPathSegment().split("#");
         }
-    }
 
+    }
+    /*
+    public static Uri crearUriViajes(String id) {
+        return URI_CONTENIDO.buildUpon().appendPath(id).appendPath("viajes").build();
+    }
+    */
     public static class Categorias implements ColumnasCategorias {
         public static final Uri URI_CONTENIDO =
                 URI_BASE.buildUpon().appendPath(RUTA_CATEGORIAS).build();

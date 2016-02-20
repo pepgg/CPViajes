@@ -2,43 +2,65 @@ package cpviajes.modelo;
 
 public class Eventos {
 
-    public String idEventos;
+    public int idEventos;
+    public int idViaje;
+    public int idCategoria;
+    public String fechah;
+    public int kmp;
+    public String nom;
+    public String descripcio;
+    public int modpag;
+    public int moneda;
+    public float totaleur;
+    public String foto1;
+    public String foto2;
+    public String valoracion;
+    public String callenum;
+    public String cp;
+    public String ciudad;
+    public String telef;
+    public String mail;
+    public String web;
+    public String longitud;
+    public String latitud;
+    public String altitud;
+    public String comentari;
 
-    public String fecha;
 
-    public String idCliente;
-
-    public String idFormaPago;
-
-    public Eventos(String idEventos, String fecha,
-                          String idCliente, String idFormaPago) {
+    public Eventos (int idEventos, int idViaje, int idCategoria, String fechah,
+                    int kmp, String nom, String descripcio, int modpag, int moneda,
+                    float totaleur, String foto1, String foto2, String valoracion, String callenum,
+                    String cp, String ciudad, String telef, String mail, String web, String longitud,
+                    String latitud, String altitud, String comentari
+    ) {
         this.idEventos = idEventos;
-        this.fecha = fecha;
-        this.idCliente = idCliente;
-        this.idFormaPago = idFormaPago;
+        this.idViaje = idViaje;
+        this.idCategoria = idCategoria;
+        this.fechah = fechah;
+        this.kmp = kmp;
+        this.nom = nom;
+        this.descripcio = descripcio;
+        this.modpag = modpag;
+        this.moneda = moneda;
+        this.totaleur = totaleur;
+        this.foto1 = foto1;
+        this.foto2 = foto2;
+        this.valoracion = valoracion;
+        this.callenum = callenum;
+        this.cp = cp;
+        this.ciudad = ciudad;
+        this.telef = telef;
+        this.mail = mail;
+        this.web = web;
+        this.longitud = longitud;
+        this.latitud = latitud;
+        this.altitud = altitud;
+        this.comentari = comentari;
     }
 }
 //////
 //
-/*
-db.execSQL(String.format("CREATE TABLE " +
-        "%s Tablas.CABECERA_PEDIDO " +
-        "(%s BaseColumns._ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-        "%s CabecerasPedido.ID_CABECERA_PEDIDO TEXT UNIQUE NOT NULL," +
-        "%s CabecerasPedido.FECHA DATETIME NOT NULL," +
-        "%s CabecerasPedido.ID_CLIENTE TEXT NOT NULL %s  Referencias.ID_CLIENTE," +
-        "%s CabecerasPedido.ID_FORMA_PAGO TEXT NOT NULL %s Referencias.ID_FORMA_PAGO)",
-        Tablas.CABECERA_PEDIDO, ,
-        , ,
-        ,,
-        , ));
-
-
-*/
-
-
-
-////////////////
+////////
 /*
 private static final String E_TABLE =
         "create table " + TABLE_EVENT + " (_id integer primary key autoincrement, "

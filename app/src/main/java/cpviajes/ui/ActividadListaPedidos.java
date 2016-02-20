@@ -146,7 +146,7 @@ public class ActividadListaPedidos extends AppCompatActivity {
                     .newDelete(CabecerasPedido.crearUriCabeceraPedido(pedido1))
                     .build());
 
-            // Actualización Cliente
+            // Actualización Monedas
             ops.add(ContentProviderOperation.newUpdate(Clientes.crearUriCliente(cliente2))
                     .withValue(Clientes.ID, cliente2)
                     .withValue(Clientes.NOMBRES, "Carlos Alberto")
