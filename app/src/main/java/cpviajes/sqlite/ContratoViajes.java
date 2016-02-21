@@ -152,8 +152,9 @@ public class ContratoViajes {
         public static Uri crearUriViajes(String id) {
             return URI_CONTENIDO.buildUpon().appendPath(id).build();
         }
-        public static String[] obtenerIdViaje(Uri uri) {
-            return uri.getLastPathSegment().split("#");
+        //public static String[] obtenerIdViaje(Uri uri) {
+        public static String obtenerIdViaje(Uri uri) {
+            return uri.getLastPathSegment();
         }
 
     }
